@@ -251,7 +251,7 @@ class Board
     nil
   end
 
-  def self.board
+  def self.starting_board
     board = Board.new
 
     #black pieces
@@ -263,7 +263,11 @@ class Board
     board[[0,5]] = SlidingPiece.new(board, :black, [0,5], :bishop)
     board[[0,6]] = SteppingPiece.new(board, :black, [0,6], :knight)
     board[[0,7]] = SlidingPiece.new(board, :black, [0,7], :rook)
-    #TODO black pawns here
+
+    # black pawns
+    8.times do |y|
+      board[[1, y]] = Pawn.new(board, :black, [1, y], :pawn)
+    end
 
     # white pieces
     board[[7,0]] = SlidingPiece.new(board, :white, [7,0], :rook)
@@ -274,7 +278,12 @@ class Board
     board[[7,5]] = SlidingPiece.new(board, :white, [7,5], :bishop)
     board[[7,6]] = SteppingPiece.new(board, :white, [7,6], :knight)
     board[[7,7]] = SlidingPiece.new(board, :white, [7,7], :rook)
-    #TODO white pawns here
+
+    #white pawns
+    8.times do |y|
+      board[[6, y]] = Pawn.new(board, :white, [6, y], :pawn)
+    end
+
     board
   end
 
