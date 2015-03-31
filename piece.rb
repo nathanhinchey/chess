@@ -1,9 +1,10 @@
 class Piece
-  attr_accessor :color, :board, :position
-  def initialize(board, color, position)
+  attr_accessor :color, :board, :position, :piece_type
+  def initialize(board, color, position, piece_type)
     @color = color
     @board = board
     @position = position
+    @piece_type = piece_type
   end
 
   def move(to_position)
@@ -38,10 +39,13 @@ class Piece
 end
 
 class SlidingPiece < Piece
-  def initialize(board, diagonal = false, horizontal_and_vertical = false, color, position)
-    @diagonal = diagonal
-    @horizontal_and_vertical = horizontal_and_vertical
-    super(board, color, position)
+  def initialize(board, color, position, piece_type)
+    @diagonal = false
+    @horizontal_and_vertical = false
+    super
+    @piece_type = piece_type
+    @diagonal = true if piece_type == :queen || piece_type == :bishop
+    @horizontal_and_vertical = true if piece_type == :rook || piece_type == :queen
   end
 
   def horiz_or_vert?(to_position)
@@ -118,12 +122,16 @@ class SteppingPiece < Piece
     [ 1, 1]
   ]
 
-  def initialize(board, type_of_piece, color, position)
+  def initialize(board, color, position, type_of_piece)
     @type_of_piece = type_of_piece
-    super(board, color, position)
+    super
   end
 
   def legal_move?(to_position)
+    # p @position[0]
+    # p @position[1]
+    # p to_position[0]
+    # p to_position[1]
     move = [@position[0] - to_position[0], @position[1] - to_position[1]]
     if @type_of_piece == :knight
       return true if KNIGHT_MOVES.include?(move)
@@ -150,6 +158,27 @@ class Board
   def []=(pos, value)
     x, y = pos
     @board[x][y] = value
+  end
+
+  def king_position(color)
+    board.each do |row|
+      row.each do |piece|
+        if piece && piece.piece_type == :king && piece.color == color
+          return piece.position
+        end
+      end
+    end
+  end
+
+  def in_check?(color)
+    board.each do |row|
+      row.each do |piece|
+        if piece && piece.legal_move?(king_position(color)) && piece.color != color
+          return true
+        end
+      end
+    end
+    false
   end
 
 end
