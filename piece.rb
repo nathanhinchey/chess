@@ -20,6 +20,10 @@ class Piece
     else
       raise "Invalid move"
     end
+
+    def inspect
+      "#{@color} #{@position} #{@piece_type}"
+    end
   end
 
 
@@ -142,6 +146,35 @@ class SteppingPiece < Piece
   end
 end
 
+
+
+class Pawn < Piece
+  def initialize(board, color, position, piece_type)
+    super
+    @color = color
+    @direction = -1 if color == :black
+    @direction = 1 if color == :white
+  end
+
+  def legal_move?(to_position)
+    x_diff = to_position[0] - position[0]
+    y_diff = to_position[1] - position[1]
+    if x_diff == 0 && y_diff == 1 && board[to_position].nil?
+      return true
+    elsif x_diff == 1 && y_diff == 1 && board[to_position].color != @color
+      return true
+    elsif x_diff == -1 && y_diff == 1 && board[to_position].color != @color
+      return true
+    elsif (x_diff == 0 && y_diff == 0 && board[to_position].nil?) && (@position[0] == 1 || @position[0] == 6)
+      return true
+    else
+      return false
+    end
+
+  end
+
+end
+
 class Board
 
   HASH_PIECES = {white: {
@@ -201,8 +234,8 @@ class Board
       self[start_pos].move(end_pos)
       self[start_pos], self[end_pos] = nil, self[start_pos]
     end
-    rescue
-      puts "Invalid_move"
+    # rescue
+    #   puts "Invalid move (board)"
   end
 
   def print_board
