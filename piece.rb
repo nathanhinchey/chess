@@ -1,34 +1,55 @@
 class Piece
-  attr_reader :color, :board
+  attr_accessor :color, :board, :position
   def initialize(board, color, position)
     @color = color
     @board = board
     @position = position
   end
 
-  def move
+  def move(to_position)
+    if available_square?(to_position)
+      if board[to_position].nil?
+        #move there
+        @position = to_position
+      else
+        #capture the enemy piece, and put this piece there
+        @position = to_position
+        capture(board[to_position])
+      end
+    else
+      raise "Invalid move"
+    end
   end
 
-  def valid_move?(position_to)
-    if ((position_to[0].between?(0 , 7) && position_to[1].between?(0 , 7)) && (board[position_to].nil? || board[position_to].color != self.color ))
-      return true
-    end
+  def available_square?(to_position)
+    board[to_position].nil? || board[to_position].color != self.color
+  end
 
-    false
+  def on_board?(position)
+    position[0].between?(0 , 7) && position[1].between?(0 , 7)
+
+  end
+
+  def capture(other_piece)
+    print "This piece captured #{other_piece}."
   end
 end
 
 class SlidingPiece < Piece
-  def initialize(board, diagonal = false, horizontal_and_vertical = false)
+  def initialize(board, diagonal = false, horizontal_and_vertical = false, color, position)
     @diagonal = diagonal
     @horizontal_and_vertical = horizontal_and_vertical
-    super(board, "black", [0,0])
+    super(board, color, position)
   end
 
-  def move(to_position)
-    #if horiz_or_vert?(to_position) == @horizontal_and_vertical ||
-    #  horiz_or_vert?(to_position) == diagonal
+  # def move(to_position)
+  #   #if horiz_or_vert?(to_position) == @horizontal_and_vertical ||
+  #   #  horiz_or_vert?(to_position) == diagonal
+  #
+  # end
 
+  def move(to_position)
+    super
   end
 
   def horiz_or_vert?(to_position)
@@ -78,7 +99,6 @@ class SlidingPiece < Piece
 
 
   def legal_path?(to_position)
-    # return false unless to_position[0] == @position[0]
     # TODO make sure it's a legal direction
     x_positions = [to_position[0], @position[0]]
     y_positions = [to_position[1], @position[1]]
@@ -86,9 +106,9 @@ class SlidingPiece < Piece
     low_x_pos, high_x_pos = x_positions.sort
     low_y_pos, high_y_pos = y_positions.sort
 
-
-    (low_y_pos..high_y_pos).each do |step|
-      next if valid_move?([@position[0] + step, @position[1] + step])
+    ((low_y_pos + 1)...high_y_pos).each do |step|
+      current_square = [@position[0] + step, @position[1] + step]
+      next if board[current_square].nil? #makes sure squares are empty
       return false
     end
 
@@ -101,6 +121,9 @@ end
 
 
 class Board
+
+  attr_reader :board
+
   def initialize
     @board = Array.new(8) {Array.new(8)}
   end
