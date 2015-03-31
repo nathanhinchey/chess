@@ -221,7 +221,7 @@ class Board
   def in_check?(color)
     board.each do |row|
       row.each do |piece|
-        if piece && piece.legal_move?(king_position(color)) && piece.color != color
+        if piece && piece.legal_move?(king_position(color)) #&& piece.color != color
           return true
         end
       end
@@ -229,13 +229,14 @@ class Board
     false
   end
 
-  def move(start_pos, end_pos)
-    if self[start_pos]
+  def move(start_pos, end_pos, color)
+    if self[start_pos] && self[start_pos].color == color
       self[start_pos].move(end_pos)
       self[start_pos], self[end_pos] = nil, self[start_pos]
+      true
+    else
+      false
     end
-    # rescue
-    #   puts "Invalid move (board)"
   end
 
   def print_board
@@ -319,14 +320,27 @@ class Game
   end
 
   def play
+    color = :white
     loop do
       @board.print_board
 
-      puts "White's turn to move."
+      input_loop(color)
+      color = switch_color(color)
+    end
+  end
+
+  def switch_color(color)
+    color == :white ? :black : :white
+  end
+
+  def input_loop(color)
+    moved = false
+    until moved
+      puts "#{color.to_s.capitalize}'s turn to move."
       from_pos, to_pos = get_move
       p from_pos
       p to_pos
-      @board.move(from_pos, to_pos)
+      moved = @board.move(from_pos, to_pos, color)
     end
   end
 
@@ -339,6 +353,10 @@ class Game
     to_row = TRANSLATION_HASH[to_position[1]]
 
     [[from_row,from_col],[to_row,to_col]]
+  end
+
+  def print_board
+    @board.print_board
   end
 
 
