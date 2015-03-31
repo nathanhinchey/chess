@@ -123,7 +123,6 @@ class SteppingPiece < Piece
   ]
 
   def initialize(board, color, position, type_of_piece)
-    @type_of_piece = type_of_piece
     super
   end
 
@@ -133,9 +132,9 @@ class SteppingPiece < Piece
     # p to_position[0]
     # p to_position[1]
     move = [@position[0] - to_position[0], @position[1] - to_position[1]]
-    if @type_of_piece == :knight
+    if @piece_type == :knight
       return true if KNIGHT_MOVES.include?(move)
-    elsif @type_of_piece == :king
+    elsif @piece_type == :king
       return true if KING_MOVES.include?(move)
     end
 
@@ -144,6 +143,22 @@ class SteppingPiece < Piece
 end
 
 class Board
+
+  HASH_PIECES = {white: {
+    king: '♔',
+    queen: '♕',
+    rook: '♖',
+    bishop: '♗',
+    knight: '♘',
+    pawn: '♙'
+  }, black: {
+    king: '♚',
+    queen: '♛',
+    rook: '♜',
+    bishop: '♝',
+    knight: '♞',
+    pawn: '♟'
+  }}
 
   attr_reader :board
 
@@ -179,6 +194,55 @@ class Board
       end
     end
     false
+  end
+
+  def move(start_pos, end_pos)
+    if self[start_pos]
+      self[start_pos].move(end_pos)
+      self[start_pos], self[end_pos] = nil, self[start_pos]
+    end
+    rescue
+      puts "Invalid_move"
+  end
+
+  def print_board
+    board.each do |row|
+      print "\n"
+      row.each do |piece|
+        print HASH_PIECES[piece.color][piece.piece_type] if piece
+        print "_" if piece.nil?
+        print " "
+      end
+    end
+
+    nil
+  end
+
+  def self.board
+    board = Board.new
+
+    #black pieces
+    board[[0,0]] = SlidingPiece.new(board, :black, [0,0], :rook)
+    board[[0,1]] = SteppingPiece.new(board, :black, [0,1], :knight)
+    board[[0,2]] = SlidingPiece.new(board, :black, [0,2], :bishop)
+    board[[0,3]] = SlidingPiece.new(board, :black, [0,3], :queen)
+    board[[0,4]] = SteppingPiece.new(board, :black, [0,4], :king)
+    board[[0,5]] = SlidingPiece.new(board, :black, [0,5], :bishop)
+    board[[0,6]] = SteppingPiece.new(board, :black, [0,6], :knight)
+    board[[0,7]] = SlidingPiece.new(board, :black, [0,7], :rook)
+    #TODO black pawns here
+
+    # white pieces
+    board[[7,0]] = SlidingPiece.new(board, :white, [7,0], :rook)
+    board[[7,1]] = SteppingPiece.new(board, :white, [7,1], :knight)
+    board[[7,2]] = SlidingPiece.new(board, :white, [7,2], :bishop)
+    board[[7,3]] = SlidingPiece.new(board, :white, [7,3], :queen)
+    board[[7,4]] = SteppingPiece.new(board, :white, [7,4], :king)
+    board[[7,5]] = SlidingPiece.new(board, :white, [7,5], :bishop)
+    board[[7,6]] = SteppingPiece.new(board, :white, [7,6], :knight)
+    board[[7,7]] = SlidingPiece.new(board, :white, [7,7], :rook)
+    #TODO white pawns here
+    board
   end
 
 end
