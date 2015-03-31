@@ -7,7 +7,7 @@ class Piece
   end
 
   def move(to_position)
-    if available_square?(to_position)
+    if legal_move?(to_position)
       if board[to_position].nil?
         #move there
         @position = to_position
@@ -20,6 +20,8 @@ class Piece
       raise "Invalid move"
     end
   end
+
+
 
   def available_square?(to_position)
     board[to_position].nil? || board[to_position].color != self.color
@@ -42,16 +44,6 @@ class SlidingPiece < Piece
     super(board, color, position)
   end
 
-  # def move(to_position)
-  #   #if horiz_or_vert?(to_position) == @horizontal_and_vertical ||
-  #   #  horiz_or_vert?(to_position) == diagonal
-  #
-  # end
-
-  def move(to_position)
-    super
-  end
-
   def horiz_or_vert?(to_position)
     to_position[0] == @position[0] || to_position[1] == @position[1]
   end
@@ -66,37 +58,18 @@ class SlidingPiece < Piece
     end
   end
 
-  # def legal_horiz_move(to_position)
-  #   return false unless to_position[1] == @position[1]
-  #   if to_position[0] > @position[0]
-  #     high_x_pos, low_x_pos = to_position[0], @position[0]
-  #   else
-  #     low_x_pos, high_x_pos = to_position[0], @position[0]
-  #   end
-  #   (low_x_pos..high_x_pos).each do |step|
-  #     next if valid_move?([@position[0] + step, @position[1]])
-  #     return false
-  #   end
-  #
-  #   true
-  # end
 
-  # def legal_vert_move(to_position)
-  #   return false unless to_position[0] == @position[0]
-  #   if to_position[1] > @position[1]
-  #     high_y_pos, low_y_pos = to_position[1], @position[1]
-  #   else
-  #     low_y_pos, high_y_pos = to_position[1], @position[1]
-  #   end
-  #   (low_y_pos..high_y_pos).each do |step|
-  #     next if valid_move?([@position[0], @position[1] + step])
-  #     return false
-  #   end
-  #
-  #   true
-  # end
-
-
+  def legal_move?(to_position)
+    return false unless available_square?(to_position)
+    return false unless legal_path?(to_position)
+    if @diagonal && diagonal?(to_position)
+      true
+    elsif @horizontal_and_vertical && horiz_or_vert?(to_position)
+      true
+    else
+      false
+    end
+  end
 
   def legal_path?(to_position)
     # TODO make sure it's a legal direction
@@ -119,6 +92,48 @@ class SlidingPiece < Piece
 end
 # [[piece object][nil][nil][piece_object]]
 
+
+class SteppingPiece < Piece
+
+  KNIGHT_MOVES = [
+    [-1, 2],
+    [-1,-2],
+    [ 1,-2],
+    [ 1, 2],
+    [-2, 1],
+    [-2,-1],
+    [ 2, 1],
+    [ 2,-1]
+  ]
+
+  KING_MOVES = [
+    [-1,-1],
+    [-1, 0],
+    [-1, 1],
+    [ 0,-1],
+    [ 0, 0],
+    [ 0, 1],
+    [ 1,-1],
+    [ 1, 0],
+    [ 1, 1]
+  ]
+
+  def initialize(board, type_of_piece, color, position)
+    @type_of_piece = type_of_piece
+    super(board, color, position)
+  end
+
+  def legal_move?(to_position)
+    move = [@position[0] - to_position[0], @position[1] - to_position[1]]
+    if @type_of_piece == :knight
+      return true if KNIGHT_MOVES.include?(move)
+    elsif @type_of_piece == :king
+      return true if KING_MOVES.include?(move)
+    end
+
+    false
+  end
+end
 
 class Board
 
