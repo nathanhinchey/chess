@@ -152,20 +152,20 @@ class Pawn < Piece
   def initialize(board, color, position, piece_type)
     super
     @color = color
-    @direction = -1 if color == :black
-    @direction = 1 if color == :white
+    @direction = -1 if color == :white
+    @direction = 1 if color == :black
   end
 
   def legal_move?(to_position)
-    x_diff = to_position[0] - position[0]
-    y_diff = to_position[1] - position[1]
-    if x_diff == 0 && y_diff == 1 && board[to_position].nil?
+    x_diff = (to_position[0] - position[0]) * @direction
+    y_diff = (to_position[1] - position[1]) * @direction
+    if x_diff == 1 && y_diff == 0 && board[to_position].nil?
       return true
     elsif x_diff == 1 && y_diff == 1 && board[to_position].color != @color
       return true
-    elsif x_diff == -1 && y_diff == 1 && board[to_position].color != @color
+    elsif x_diff == 1 && y_diff == -1 && board[to_position].color != @color
       return true
-    elsif (x_diff == 0 && y_diff == 0 && board[to_position].nil?) && (@position[0] == 1 || @position[0] == 6)
+    elsif (x_diff == 2 && y_diff == 0 && board[to_position].nil?) && (@position[0] == 1 || @position[0] == 6)
       return true
     else
       return false
@@ -286,5 +286,60 @@ class Board
 
     board
   end
+
+end
+
+
+class Game
+
+  TRANSLATION_HASH = {
+    "a" => 0,
+    "b" => 1,
+    "c" => 2,
+    "d" => 3,
+    "e" => 4,
+    "f" => 5,
+    "g" => 6,
+    "h" => 7,
+
+    "1" => 7,
+    "2" => 6,
+    "3" => 5,
+    "4" => 4,
+    "5" => 3,
+    "6" => 2,
+    "7" => 1,
+    "8" => 0
+  }
+
+  def initialize
+    @board = Board.starting_board
+
+
+  end
+
+  def play
+    loop do
+      @board.print_board
+
+      puts "White's turn to move."
+      from_pos, to_pos = get_move
+      p from_pos
+      p to_pos
+      @board.move(from_pos, to_pos)
+    end
+  end
+
+  def get_move
+    puts "Enter a move "
+    from_position, to_position = gets.chomp.split(":")
+    from_col = TRANSLATION_HASH[from_position[0]]
+    from_row = TRANSLATION_HASH[from_position[1]]
+    to_col = TRANSLATION_HASH[to_position[0]]
+    to_row = TRANSLATION_HASH[to_position[1]]
+
+    [[from_row,from_col],[to_row,to_col]]
+  end
+
 
 end
