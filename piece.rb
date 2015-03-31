@@ -35,38 +35,49 @@ class SlidingPiece < Piece
     to_position[0] == @position[0] || to_position[1] == @position[1]
   end
 
-
-  def legal_horiz_move(to_position)
-    return false unless to_position[1] == @position[1]
-    if to_position[0] > @position[0]
-      high_x_pos, low_x_pos = to_position[0], @position[0]
+  def diagonal?(to_position)
+    x_diff = to_position[0] - @position[0]
+    y_diff = to_position[1] - @position[1]
+    if (x_diff == y_diff) || (x_diff == y_diff * (-1))
+      true
     else
-      low_x_pos, high_x_pos = to_position[0], @position[0]
+      false
     end
-    (low_x_pos..high_x_pos).each do |step|
-      next if valid_move?([@position[0] + step, @position[1]])
-      return false
-    end
-
-    true
   end
 
-  def legal_vert_move(to_position)
-    return false unless to_position[0] == @position[0]
-    if to_position[1] > @position[1]
-      high_y_pos, low_y_pos = to_position[1], @position[1]
-    else
-      low_y_pos, high_y_pos = to_position[1], @position[1]
-    end
-    (low_y_pos..high_y_pos).each do |step|
-      next if valid_move?([@position[0], @position[1] + step])
-      return false
-    end
+  # def legal_horiz_move(to_position)
+  #   return false unless to_position[1] == @position[1]
+  #   if to_position[0] > @position[0]
+  #     high_x_pos, low_x_pos = to_position[0], @position[0]
+  #   else
+  #     low_x_pos, high_x_pos = to_position[0], @position[0]
+  #   end
+  #   (low_x_pos..high_x_pos).each do |step|
+  #     next if valid_move?([@position[0] + step, @position[1]])
+  #     return false
+  #   end
+  #
+  #   true
+  # end
 
-    true
-  end
+  # def legal_vert_move(to_position)
+  #   return false unless to_position[0] == @position[0]
+  #   if to_position[1] > @position[1]
+  #     high_y_pos, low_y_pos = to_position[1], @position[1]
+  #   else
+  #     low_y_pos, high_y_pos = to_position[1], @position[1]
+  #   end
+  #   (low_y_pos..high_y_pos).each do |step|
+  #     next if valid_move?([@position[0], @position[1] + step])
+  #     return false
+  #   end
+  #
+  #   true
+  # end
 
-  def legal_diag_move(to_position)
+
+
+  def legal_path?(to_position)
     # return false unless to_position[0] == @position[0]
     # TODO make sure it's a legal direction
     x_positions = [to_position[0], @position[0]]
