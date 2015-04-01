@@ -45,42 +45,52 @@ class SlidingPiece < Piece
     x_positions = [to_position[0], @position[0]]
     y_positions = [to_position[1], @position[1]]
 
-    low_x_pos, high_x_pos = x_positions.sort
-    low_y_pos, high_y_pos = y_positions.sort
-    if low_x_pos == high_x_pos
-      ((low_y_pos + 1)...high_y_pos).each do |step|
-        current_square = [@position[0], step]
-        next if board[current_square].nil? #makes sure squares are empty
-        return false
-      end
-    elsif low_y_pos == high_y_pos
-      ((low_x_pos + 1)...high_x_pos).each do |step|
-        current_square = [step, @position[1]]
-        next if board[current_square].nil? #makes sure squares are empty
-        return false
-      end
+    # low_x_pos, high_x_pos = x_positions.sort
+    # low_y_pos, high_y_pos = y_positions.sort
+    if to_position[0] - @position[0] == 0
+      difference = to_position[1] - @position[1]
+      step_x = 0
+      step_y = 1 * (difference / difference.abs)
     else
-      if to_position[0] - @position[0] == to_position[1] - @position[1]
-        multiplier = 1
-      else
-        multiplier = -1
-      end
-      low, high = [1, to_position[0] - @position[0]].sort
-      (low...high).each do |difference|
-        current_square = [@position[0] + difference, (@position[1] + difference) * multiplier]
-        next if board[current_square].nil? #makes sure squares are empty
-        return false
-      end
-      # elsif to_position[0] - @position[0] == -1 * (to_position[1] - @position[1])
-      #   (1...to_position[0] - @position[0]).times do |difference|
-      #     current_square = [@position[0] + difference, @position[1] - difference]
-      #     next if board[current_square].nil? #makes sure squares are empty
-      #     return false
-      #   end
-      # end
+      difference = to_position[0] - @position[0]
+      step_x = 1 * (difference / difference.abs)
+      step_y = 0
     end
+
+    (1...difference.abs).each do |step|
+      current_square = [@position[0] + step_x * step, @position[1] + step_y * step]
+      next if board[current_square].nil? #makes sure squares are empty
+      return false
+    end
+
+
+
+
+    # ((low_y_pos + 1)...high_y_pos).each do |step|
+    #   current_square = [@position[0], step]
+    #   next if board[current_square].nil? #makes sure squares are empty
+    #   return false
+    # end
+    # elsif low_y_pos == high_y_pos
+    #   ((low_x_pos + 1)...high_x_pos).each do |step|
+    #     current_square = [step, @position[1]]
+    #     next if board[current_square].nil? #makes sure squares are empty
+    #     return false
+    #   end
+
+    # else
+    #   if to_position[0] - @position[0] == to_position[1] - @position[1]
+    #     multiplier = 1
+    #   else
+    #     multiplier = -1
+    #   end
+    #   low, high = [1, to_position[0] - @position[0]].sort
+    #   (low...high).each do |difference|
+    #     current_square = [@position[0] + difference, (@position[1] + difference) * multiplier]
+    #     next if board[current_square].nil? #makes sure squares are empty
+    #     return false
+    #   end
+    # end
     true
   end
-
-
 end
