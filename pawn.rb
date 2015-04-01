@@ -8,7 +8,7 @@ class Pawn < Piece
     @direction = 1 if color == :black
   end
 
-  def legal_move?(to_position)
+  def specific_legal_move?(to_position)
     #0p @position
     #p to_position
     x_diff = (to_position[0] - position[0]) * @direction

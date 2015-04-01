@@ -2,6 +2,18 @@ require 'byebug'
 require './piece'
 
 class SlidingPiece < Piece
+
+  DIRECTIONS = [
+    [-1,-1],
+    [-1, 0],
+    [-1, 1],
+    [ 0,-1],
+    [ 0, 1],
+    [ 1,-1],
+    [ 1, 0],
+    [ 1, 1]
+  ]
+
   def initialize(board, color, position, piece_type)
     @diagonal = false
     @horizontal_and_vertical = false
@@ -16,7 +28,6 @@ class SlidingPiece < Piece
   end
 
   def diagonal?(to_position)
-    # p "diagonal #{to_position}"
     x_diff = to_position[0] - @position[0]
     y_diff = to_position[1] - @position[1]
     if (x_diff == y_diff) || (x_diff == y_diff * (-1))
@@ -27,7 +38,7 @@ class SlidingPiece < Piece
   end
 
 
-  def legal_move?(to_position)
+  def specific_legal_move?(to_position)
     return false unless available_square?(to_position)
     return false unless legal_path?(to_position)
     if @diagonal && diagonal?(to_position)
@@ -56,11 +67,34 @@ class SlidingPiece < Piece
 
     (1...difference.abs).each do |step|
       current_square = [@position[0] + step_x * step, @position[1] + step_y * step]
-      p current_square
       return false unless board[current_square].nil? #makes sure squares are empty
     end
     true
   end
+
+  def valid_moves
+    legal_moves_array = []
+    #board[position] #where we start
+    p "direction"
+    DIRECTIONS.each do |direction|
+
+      move_OK = true
+      multiplier = 1
+      while move_OK
+        x_dir, y_dir = direction[0] * multiplier, direction[1] * multiplier
+        if legal_move?([position[0] + x_dir, position[1] + y_dir])
+          legal_moves_array << [position[0] + x_dir, position[1] + y_dir]
+          multiplier += 1
+        else
+          move_OK = false
+        end
+      end
+    end
+
+    legal_moves_array
+  end
+
+
 
   def legal_diag_path?(to_position)
     if to_position[0] - @position[0] == to_position[1] - @position[1]

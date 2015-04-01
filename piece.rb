@@ -33,6 +33,7 @@ class Piece
 
 
   def available_square?(to_position)
+    return false unless on_board?(to_position)
     board[to_position].nil? || board[to_position].color != self.color
   end
 
@@ -50,8 +51,10 @@ class Piece
   #  p new_piece.position
   end
 
-  def valid_moves()
-
+  def legal_move?(to_position)
+    return false unless specific_legal_move?(to_position)
+    return false if board.move_puts_player_in_check?(position, to_position, color)
+    true
   end
 end
 # [[piece object][nil][nil][piece_object]]

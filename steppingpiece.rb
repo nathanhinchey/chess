@@ -28,11 +28,7 @@ class SteppingPiece < Piece
     super
   end
 
-  def legal_move?(to_position)
-    # p @position[0]
-    # p @position[1]
-    # p to_position[0]
-    # p to_position[1]
+  def specific_legal_move?(to_position)
     move = [@position[0] - to_position[0], @position[1] - to_position[1]]
     if @piece_type == :knight
       return true if KNIGHT_MOVES.include?(move)
@@ -41,5 +37,26 @@ class SteppingPiece < Piece
     end
 
     false
+  end
+
+  def valid_moves
+    valid_moves_array = []
+    if piece_type == :knight
+      KNIGHT_MOVES.each do |move|
+        if legal_move?([position[0] + move[0], position[1] + move[1]])
+
+          valid_moves_array << [position[0] + move[0], position[1] + move[1]]
+        end
+      end
+    else
+      KING_MOVES.each do |move|
+        if legal_move?([@position[0] + move[0], @position[1] + move[1]])
+          p [position[0] + move[0], position[1] + move[1]]
+          valid_moves_array << [@position[0] + move[0], @position[1] + move[1]]
+        end
+      end
+    end
+
+    valid_moves_array
   end
 end

@@ -49,9 +49,7 @@ class Board
   def in_check?(color)
     board.each do |row|
       row.each do |piece|
-        if piece && piece.legal_move?(king_position(color))
-          p piece.position
-          p piece.piece_type
+        if piece && piece.specific_legal_move?(king_position(color))
           return true
         end
       end
@@ -61,19 +59,25 @@ class Board
 
   def checkmate?(color)
     return false unless in_check?(color)
-
+    board.each do |row|
+      row.each do |piece|
+        next if piece.nil?
+        p piece
+        if piece.color == color && piece.valid_moves.empty?
+          checkmate = true
+        else
+          return false
+        end
+      end
+    end
+    checkmate
   end
-
-
 
   def move_puts_player_in_check?(from_pos, to_pos, color)
     board_copy = self.dup
-    p "somethig"
     board_copy.print_board
-    p board_copy.in_check?(color)
     board_copy.move(from_pos, to_pos, color)
     board_copy.print_board
-    p board_copy.in_check?(color)
     board_copy.in_check?(color)
 
   end
