@@ -48,7 +48,7 @@ class Board
   def in_check?(color)
     board.each do |row|
       row.each do |piece|
-        if piece && piece.legal_move?(king_position(color)) #&& piece.color != color
+        if piece && piece.legal_move?(king_position(color))
           return true
         end
       end
@@ -67,16 +67,29 @@ class Board
   end
 
   def print_board
-    board.each do |row|
+    print_letter
+    board.each_with_index do |row, row_number|
       print "\n"
+      print ((row_number - 8).abs).to_s + " "
       row.each do |piece|
         print HASH_PIECES[piece.color][piece.piece_type] if piece
         print "_" if piece.nil?
         print " "
       end
+      print ((row_number - 8).abs).to_s
     end
 
+    print "\n"
+    print_letter
+    print "\n\n"
     nil
+  end
+
+  def print_letter
+    print " "
+    letters = ("a".."h").each do |letter|
+      print " #{letter}"
+    end
   end
 
   def self.starting_board
