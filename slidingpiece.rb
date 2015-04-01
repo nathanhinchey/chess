@@ -48,11 +48,8 @@ class SlidingPiece < Piece
     low_x_pos, high_x_pos = x_positions.sort
     low_y_pos, high_y_pos = y_positions.sort
     if low_x_pos == high_x_pos
-      p "low_x_pos == high_x_pos"
       ((low_y_pos + 1)...high_y_pos).each do |step|
         current_square = [@position[0], step]
-        p low_y_pos
-        p high_y_pos
         next if board[current_square].nil? #makes sure squares are empty
         return false
       end
@@ -64,19 +61,23 @@ class SlidingPiece < Piece
       end
     else
       if to_position[0] - @position[0] == to_position[1] - @position[1]
-
-        (1...to_position[0] - @position[0]).each do |difference|
-          current_square = [@position[0] + difference, @position[1] + difference]
-          next if board[current_square].nil? #makes sure squares are empty
-          return false
-        end
-      elsif to_position[0] - @position[0] == -1 * (to_position[1] - @position[1])
-        (1...to_position[0] - @position[0]).times do |difference|
-          current_square = [@position[0] + difference, @position[1] - difference]
-          next if board[current_square].nil? #makes sure squares are empty
-          return false
-        end
+        multiplier = 1
+      else
+        multiplier = -1
       end
+      low, high = [1, to_position[0] - @position[0]].sort
+      (low...high).each do |difference|
+        current_square = [@position[0] + difference, (@position[1] + difference) * multiplier]
+        next if board[current_square].nil? #makes sure squares are empty
+        return false
+      end
+      # elsif to_position[0] - @position[0] == -1 * (to_position[1] - @position[1])
+      #   (1...to_position[0] - @position[0]).times do |difference|
+      #     current_square = [@position[0] + difference, @position[1] - difference]
+      #     next if board[current_square].nil? #makes sure squares are empty
+      #     return false
+      #   end
+      # end
     end
     true
   end

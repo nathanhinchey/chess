@@ -22,7 +22,6 @@ class Pawn < Piece
     elsif (x_diff == 2 && y_diff == 0 && board[to_position].nil?) && (position[0] == 1 || position[0] == 6)
       return true
     else
-      puts "ilegal move in ligal move papawn"
       return false
 
     end

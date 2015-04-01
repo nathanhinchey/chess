@@ -75,8 +75,6 @@ class Board
   end
 
   def move(from_pos, to_pos, color)
-    p self[from_pos].class
-    p self[to_pos].class
     if self[from_pos] && self[from_pos].color == color
       self[from_pos].move(to_pos)
       self[from_pos], self[to_pos] = nil, self[from_pos]

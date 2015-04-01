@@ -12,7 +12,6 @@ class Piece
     if legal_move?(to_position)
       if board[to_position].nil?
         #move there
-        p "to_position #{to_position}"
         @position = to_position
       else
         #capture the enemy piece, and put this piece there
