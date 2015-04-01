@@ -115,4 +115,18 @@ class Board
     board
   end
 
+  def dup
+    new_board = Board.new
+
+    self.board.each_with_index do |row,row_i|
+      row.each_with_index do |piece,col_i|
+        unless piece.nil?
+          new_board[[row_i, col_i]] = piece.dup
+        end
+      end
+    end
+
+    new_board
+  end
+
 end

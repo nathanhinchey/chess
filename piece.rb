@@ -40,5 +40,9 @@ class Piece
   def capture(other_piece)
     print "This piece captured #{other_piece}."
   end
+
+  def dup
+    self.class.new(@board, @color, @poisiton, @piece_type)
+  end
 end
 # [[piece object][nil][nil][piece_object]]
