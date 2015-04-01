@@ -9,6 +9,8 @@ class Pawn < Piece
   end
 
   def legal_move?(to_position)
+    #0p @position
+    #p to_position
     x_diff = (to_position[0] - position[0]) * @direction
     y_diff = (to_position[1] - position[1]) * @direction
     if x_diff == 1 && y_diff == 0 && board[to_position].nil?
@@ -17,10 +19,12 @@ class Pawn < Piece
       return true
     elsif x_diff == 1 && y_diff == -1 && board[to_position].color != @color
       return true
-    elsif (x_diff == 2 && y_diff == 0 && board[to_position].nil?) && (@position[0] == 1 || @position[0] == 6)
+    elsif (x_diff == 2 && y_diff == 0 && board[to_position].nil?) && (position[0] == 1 || position[0] == 6)
       return true
     else
+      puts "ilegal move in ligal move papawn"
       return false
+
     end
 
   end

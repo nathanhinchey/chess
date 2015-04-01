@@ -40,6 +40,7 @@ class Game
 
   def switch_color(color)
     color == :white ? :black : :white
+    # $black_to_move = true
   end
 
   def input_loop(color)
@@ -47,9 +48,7 @@ class Game
     until moved
       puts "#{color.to_s.capitalize}'s turn to move."
       from_pos, to_pos = get_move
-      p from_pos
-      p to_pos
-      moved = @board.move(from_pos, to_pos, color)
+      moved = @board.make_legal_move(from_pos, to_pos, color)
     end
   end
 

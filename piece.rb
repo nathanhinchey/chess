@@ -8,9 +8,11 @@ class Piece
   end
 
   def move(to_position)
+    #p to_position
     if legal_move?(to_position)
       if board[to_position].nil?
         #move there
+        p "to_position #{to_position}"
         @position = to_position
       else
         #capture the enemy piece, and put this piece there
@@ -22,7 +24,10 @@ class Piece
     end
 
     def inspect
-      "#{@color} #{@position} #{@piece_type}"
+      { color: @color,
+        position: @position,
+        piece_type: @piece_type
+      }.inspect
     end
   end
 
@@ -42,7 +47,8 @@ class Piece
   end
 
   def dup
-    self.class.new(@board, @color, @poisiton, @piece_type)
+    new_piece = self.class.new(board, color, position, piece_type)
+  #  p new_piece.position
   end
 end
 # [[piece object][nil][nil][piece_object]]

@@ -28,11 +28,12 @@ class Board
 
   def [](pos)
     x,y = pos
-    @board[x][y]
+    return nil if x > 7
+    board[x][y]
   end
   def []=(pos, value)
     x, y = pos
-    @board[x][y] = value
+    board[x][y] = value
   end
 
   def king_position(color)
@@ -56,10 +57,29 @@ class Board
     false
   end
 
-  def move(start_pos, end_pos, color)
-    if self[start_pos] && self[start_pos].color == color
-      self[start_pos].move(end_pos)
-      self[start_pos], self[end_pos] = nil, self[start_pos]
+  def move_puts_player_in_check?(from_pos, to_pos, color)
+    board_copy = self.dup
+
+    board_copy.move(from_pos, to_pos, color)
+
+    board_copy.in_check?(color)
+  end
+
+  def make_legal_move(from_pos, to_pos, color)
+    if move_puts_player_in_check?(from_pos, to_pos, color)
+      return false
+    else
+      self.move(from_pos, to_pos, color)
+      true
+    end
+  end
+
+  def move(from_pos, to_pos, color)
+    p self[from_pos].class
+    p self[to_pos].class
+    if self[from_pos] && self[from_pos].color == color
+      self[from_pos].move(to_pos)
+      self[from_pos], self[to_pos] = nil, self[from_pos]
       true
     else
       false
@@ -134,6 +154,7 @@ class Board
     self.board.each_with_index do |row,row_i|
       row.each_with_index do |piece,col_i|
         unless piece.nil?
+          #p piece.dup
           new_board[[row_i, col_i]] = piece.dup
         end
       end
