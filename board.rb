@@ -50,6 +50,8 @@ class Board
     board.each do |row|
       row.each do |piece|
         if piece && piece.legal_move?(king_position(color))
+          p piece.position
+          p piece.piece_type
           return true
         end
       end
@@ -57,12 +59,23 @@ class Board
     false
   end
 
+  def checkmate?(color)
+    return false unless in_check?(color)
+
+  end
+
+
+
   def move_puts_player_in_check?(from_pos, to_pos, color)
     board_copy = self.dup
-
+    p "somethig"
+    board_copy.print_board
+    p board_copy.in_check?(color)
     board_copy.move(from_pos, to_pos, color)
-
+    board_copy.print_board
+    p board_copy.in_check?(color)
     board_copy.in_check?(color)
+
   end
 
   def make_legal_move(from_pos, to_pos, color)
@@ -153,7 +166,7 @@ class Board
       row.each_with_index do |piece,col_i|
         unless piece.nil?
           #p piece.dup
-          new_board[[row_i, col_i]] = piece.dup
+          new_board[[row_i, col_i]] = piece.dup(new_board)
         end
       end
     end

@@ -45,9 +45,13 @@ class Piece
     print "This piece captured #{other_piece}."
   end
 
-  def dup
-    new_piece = self.class.new(board, color, position, piece_type)
+  def dup(new_board)
+    new_piece = self.class.new(new_board, color, position, piece_type)
   #  p new_piece.position
+  end
+
+  def valid_moves()
+
   end
 end
 # [[piece object][nil][nil][piece_object]]

@@ -56,6 +56,7 @@ class SlidingPiece < Piece
 
     (1...difference.abs).each do |step|
       current_square = [@position[0] + step_x * step, @position[1] + step_y * step]
+      p current_square
       return false unless board[current_square].nil? #makes sure squares are empty
     end
     true
@@ -67,8 +68,8 @@ class SlidingPiece < Piece
     else
       multiplier = -1
     end
-    low, high = [1, to_position[0] - @position[0]].sort
-    (low...high).each do |difference|
+    low, high = [0, to_position[0] - @position[0]].sort
+    (low + 1...high).each do |difference|
       current_square = [@position[0] + difference, (@position[1] + difference) * multiplier]
       next if board[current_square].nil? #makes sure squares are empty
       return false
