@@ -1,5 +1,5 @@
 require 'byebug'
-require './piece'
+require_relative 'piece'
 
 class SlidingPiece < Piece
 

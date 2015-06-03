@@ -1,6 +1,6 @@
-require './slidingpiece'
-require './steppingpiece'
-require './pawn'
+require_relative 'slidingpiece'
+require_relative 'steppingpiece'
+require_relative 'pawn'
 
 class Board
 
@@ -85,6 +85,8 @@ class Board
   def make_legal_move(from_pos, to_pos, color)
     if move_puts_player_in_check?(from_pos, to_pos, color)
       return false
+    elsif !self.board[from_pos].specific_legal_move?(to_pos)
+      return false
     else
       self.move(from_pos, to_pos, color)
       true
@@ -93,7 +95,7 @@ class Board
 
   def move(from_pos, to_pos, color)
     if self[from_pos] && self[from_pos].color == color
-      self[from_pos].move(to_pos)
+      self[from_pos].move!(to_pos)
       self[from_pos], self[to_pos] = nil, self[from_pos]
       true
     else

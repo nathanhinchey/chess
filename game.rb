@@ -1,4 +1,5 @@
-require './board'
+require 'byebug'
+require_relative 'board'
 
 class Game
 

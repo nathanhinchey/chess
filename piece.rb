@@ -7,29 +7,22 @@ class Piece
     @piece_type = piece_type
   end
 
-  def move(to_position)
-    #p to_position
-    if legal_move?(to_position)
-      if board[to_position].nil?
-        #move there
-        @position = to_position
-      else
-        #capture the enemy piece, and put this piece there
-        @position = to_position
-        capture(board[to_position])
-      end
+  def move!(to_position)
+    if board[to_position].nil?
+      @position = to_position
     else
-      raise "Invalid move"
-    end
-
-    def inspect
-      { color: @color,
-        position: @position,
-        piece_type: @piece_type
-      }.inspect
+      #capture the enemy piece, and put this piece there
+      @position = to_position
+      board[to_position] = self
     end
   end
 
+  def inspect
+    { color: @color,
+      position: @position,
+      piece_type: @piece_type
+    }.inspect
+  end
 
 
   def available_square?(to_position)

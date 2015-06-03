@@ -1,4 +1,4 @@
-require './piece'
+require_relative 'piece'
 
 class Pawn < Piece
   def initialize(board, color, position, piece_type)
@@ -9,8 +9,8 @@ class Pawn < Piece
   end
 
   def specific_legal_move?(to_position)
-    #0p @position
-    #p to_position
+    p @position
+    p to_position
     x_diff = (to_position[0] - position[0]) * @direction
     y_diff = (to_position[1] - position[1]) * @direction
     if x_diff == 1 && y_diff == 0 && board[to_position].nil?
