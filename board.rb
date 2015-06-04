@@ -83,6 +83,7 @@ class Board
   end
 
   def make_legal_move(from_pos, to_pos, color)
+    return false unless self[from_pos].available_square?(to_pos)
     if move_puts_player_in_check?(from_pos, to_pos, color)
       return false
     elsif !self[from_pos].specific_legal_move?(to_pos)

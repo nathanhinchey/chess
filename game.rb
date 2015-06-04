@@ -56,9 +56,22 @@ class Game
     end
   end
 
+  def valid_input?(string)
+    exit if string == "exit" || string == "quit"
+    /[a-h][1-8]:[a-h][1-8]/.match(string)
+  end
+
   def get_move
-    puts "Enter a move "
-    from_position, to_position = gets.chomp.split(":")
+    puts "Enter a move:"
+    move = gets.chomp.downcase
+    until valid_input?(move)
+      puts "Invalid move."
+      puts "Valid moves are of the form <start>:<end> (e.g. B2:B4)."
+      puts "Enter a move (or type 'exit' to quit):"
+      move = gets.chomp.downcase
+    end
+
+    from_position, to_position = move.split(":")
     from_col = TRANSLATION_HASH[from_position[0]]
     from_row = TRANSLATION_HASH[from_position[1]]
     to_col = TRANSLATION_HASH[to_position[0]]

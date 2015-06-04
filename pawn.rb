@@ -15,7 +15,7 @@ class Pawn < Piece
     # p to_position
     x_diff = (to_position[0] - position[0]) * @direction
     y_diff = (to_position[1] - position[1]) * @direction
-    if x_diff == 1 && y_diff == 0 && on_board?(test_position) && board[to_position].nil?
+    if x_diff == 1 && y_diff == 0 && on_board?(to_position) && board[to_position].nil?
       return true
     elsif x_diff == 1 && y_diff == 1 && board[to_position] && board[to_position].color != @color
       return true
