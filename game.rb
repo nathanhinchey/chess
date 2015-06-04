@@ -25,9 +25,9 @@ class Game
 
   def initialize
     @board = Board.starting_board
-
-
   end
+
+  attr_reader :board
 
   def play
     color = :white

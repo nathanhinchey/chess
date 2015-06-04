@@ -58,6 +58,15 @@ class Board
     false
   end
 
+  def each_piece(&prc)
+    board.each do |row|
+      row.each do |piece|
+        prc.call(piece) if piece
+      end
+    end
+    nil
+  end
+
   def checkmate?(color)
     return false unless in_check?(color)
     board.each do |row|
