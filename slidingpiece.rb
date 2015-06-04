@@ -21,6 +21,19 @@ class SlidingPiece < Piece
     @piece_type = piece_type
     @diagonal = true if piece_type == :queen || piece_type == :bishop
     @horizontal_and_vertical = true if piece_type == :rook || piece_type == :queen
+    piece_value(@piece_type)
+  end
+
+  def piece_value(piece_type)
+    case piece_type
+    when :queen
+      @value = 9
+    when :bishop
+      @value = 3
+    when :rook
+      @value = 5
+    end
+    @value
   end
 
   def horiz_or_vert?(to_position)

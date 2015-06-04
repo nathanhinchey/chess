@@ -26,6 +26,7 @@ class SteppingPiece < Piece
 
   def initialize(board, color, position, type_of_piece)
     super
+    @value = 3 if type_of_piece == :knight
   end
 
   def specific_legal_move?(to_position)
