@@ -1,5 +1,6 @@
 require 'byebug'
 require_relative 'board'
+require_relative 'computer_player'
 
 class Game
 
@@ -30,13 +31,19 @@ class Game
   attr_reader :board
 
   def play
+    comp = ComputerPlayer.new(self.board, :black)
     color = :white
     loop do
       @board.print_board
 
       input_loop(color)
-      color = switch_color(color)
       break if @board.checkmate?(color)
+      color = switch_color(color)
+      from_pos, to_pos = comp.make_move
+      @board.move(from_pos, to_pos)
+      break if @board.checkmate?(color)
+      color = switch_color(color)
+
     end
     @board.print_board
     puts "#{switch_color(color).to_s.capitalize} wins!"

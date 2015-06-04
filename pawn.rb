@@ -8,6 +8,7 @@ class Pawn < Piece
     @color = color
     @direction = -1 if color == :white
     @direction = 1 if color == :black
+    @value = 1
   end
 
   def specific_legal_move?(to_position)
