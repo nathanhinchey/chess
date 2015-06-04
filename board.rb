@@ -51,7 +51,6 @@ class Board
     board.each do |row|
       row.each do |piece|
         if piece && piece.specific_legal_move?(king_position(color))
-          puts "#{piece.color.to_s} #{piece.piece_type.to_s} @ #{piece.position}"
           return true
         end
       end
@@ -64,38 +63,33 @@ class Board
     board.each do |row|
       row.each do |piece|
         next if piece.nil? || piece.color != color
-        if piece.valid_moves.empty?
-          checkmate = true
-        else
-          return false
-        end
+        return false unless piece.valid_moves.empty?
       end
     end
-    checkmate
+    true
   end
 
   def move_puts_player_in_check?(from_pos, to_pos, color)
     board_copy = self.dup
-    board_copy.move(from_pos, to_pos, color)
-    puts "TEST " + color.to_s + " is in check? " + board_copy.in_check?(color).to_s
-    puts "REAL " + color.to_s + " is in check? " + self.in_check?(color).to_s
+    board_copy.move(from_pos, to_pos)
     board_copy.in_check?(color)
   end
 
   def make_legal_move(from_pos, to_pos, color)
+    return false unless self[from_pos] && self[from_pos].color == color
     return false unless self[from_pos].available_square?(to_pos)
     if move_puts_player_in_check?(from_pos, to_pos, color)
       return false
     elsif !self[from_pos].specific_legal_move?(to_pos)
       return false
     else
-      self.move(from_pos, to_pos, color)
+      self.move(from_pos, to_pos)
       true
     end
   end
 
-  def move(from_pos, to_pos, color)
-    if self[from_pos] && self[from_pos].color == color
+  def move(from_pos, to_pos)
+    if self[from_pos]
       self[from_pos].move!(to_pos)
       self[from_pos], self[to_pos] = nil, self[from_pos]
       true
@@ -182,3 +176,7 @@ class Board
   end
 
 end
+<<-CHESS
+array:e2:e4,e7:e5,e1:e2,d8:h4,e2:e3,f7:f5,g1:e2,g2:g4,f5:e4,f1:h3,a8:a4,f2:f3,h4:h3
+
+CHESS

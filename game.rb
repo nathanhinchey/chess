@@ -38,8 +38,8 @@ class Game
       color = switch_color(color)
       break if @board.checkmate?(color)
     end
-
-    puts "#{switch_color(color)} wins!"
+    @board.print_board
+    puts "#{switch_color(color).to_s.capitalize} wins!"
   end
 
   def switch_color(color)
@@ -57,6 +57,13 @@ class Game
   end
 
   def valid_input?(string)
+    if string[0..5] == "array:"
+      string = string[6..-1]
+      p "array move"
+      array_move!(string)
+      @board.print_board
+      return false
+    end
     exit if string == "exit" || string == "quit"
     /[a-h][1-8]:[a-h][1-8]/.match(string)
   end
@@ -70,7 +77,10 @@ class Game
       puts "Enter a move (or type 'exit' to quit):"
       move = gets.chomp.downcase
     end
+    translate_move(move)
+  end
 
+  def translate_move(move)
     from_position, to_position = move.split(":")
     from_col = TRANSLATION_HASH[from_position[0]]
     from_row = TRANSLATION_HASH[from_position[1]]
@@ -78,6 +88,16 @@ class Game
     to_row = TRANSLATION_HASH[to_position[1]]
 
     [[from_row,from_col],[to_row,to_col]]
+  end
+
+  def array_move!(moves)
+    moves_arr = moves.split(",")
+    moves_arr.each do |move|
+      puts move
+      p translate_move(move)
+      from_pos, to_pos = translate_move(move)
+      @board.move(from_pos, to_pos)
+    end
   end
 
   def print_board

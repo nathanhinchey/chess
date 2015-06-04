@@ -41,9 +41,9 @@ class SlidingPiece < Piece
   def specific_legal_move?(to_position)
     return false unless available_square?(to_position)
     return false unless legal_path?(to_position)
-    if @diagonal && diagonal?(to_position)
+    if @diagonal && diagonal?(to_position) && legal_diag_path?(to_position)
       true
-    elsif @horizontal_and_vertical && horiz_or_vert?(to_position)
+    elsif @horizontal_and_vertical && horiz_or_vert?(to_position) && legal_horiz_vert_path?(to_position)
       true
     else
       false
@@ -75,7 +75,6 @@ class SlidingPiece < Piece
   def valid_moves
     legal_moves_array = []
     #board[position] #where we start
-    p "direction"
     DIRECTIONS.each do |direction|
 
       move_OK = true
