@@ -36,7 +36,10 @@ class Game
 
       input_loop(color)
       color = switch_color(color)
+      break if @board.checkmate?(color)
     end
+
+    puts "#{switch_color(color)} wins!"
   end
 
   def switch_color(color)

@@ -1,3 +1,4 @@
+require 'byebug'
 require_relative 'slidingpiece'
 require_relative 'steppingpiece'
 require_relative 'pawn'
@@ -50,6 +51,7 @@ class Board
     board.each do |row|
       row.each do |piece|
         if piece && piece.specific_legal_move?(king_position(color))
+          puts "#{piece.color.to_s} #{piece.piece_type.to_s} @ #{piece.position}"
           return true
         end
       end
@@ -61,9 +63,8 @@ class Board
     return false unless in_check?(color)
     board.each do |row|
       row.each do |piece|
-        next if piece.nil?
-        p piece
-        if piece.color == color && piece.valid_moves.empty?
+        next if piece.nil? || piece.color != color
+        if piece.valid_moves.empty?
           checkmate = true
         else
           return false
@@ -75,17 +76,16 @@ class Board
 
   def move_puts_player_in_check?(from_pos, to_pos, color)
     board_copy = self.dup
-    board_copy.print_board
     board_copy.move(from_pos, to_pos, color)
-    board_copy.print_board
+    puts "TEST " + color.to_s + " is in check? " + board_copy.in_check?(color).to_s
+    puts "REAL " + color.to_s + " is in check? " + self.in_check?(color).to_s
     board_copy.in_check?(color)
-
   end
 
   def make_legal_move(from_pos, to_pos, color)
     if move_puts_player_in_check?(from_pos, to_pos, color)
       return false
-    elsif !self.board[from_pos].specific_legal_move?(to_pos)
+    elsif !self[from_pos].specific_legal_move?(to_pos)
       return false
     else
       self.move(from_pos, to_pos, color)

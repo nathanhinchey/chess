@@ -29,6 +29,8 @@ class SteppingPiece < Piece
   end
 
   def specific_legal_move?(to_position)
+    return false unless available_square?(to_position)
+
     move = [@position[0] - to_position[0], @position[1] - to_position[1]]
     if @piece_type == :knight
       return true if KNIGHT_MOVES.include?(move)

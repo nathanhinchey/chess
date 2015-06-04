@@ -32,7 +32,6 @@ class Piece
 
   def on_board?(position)
     position[0].between?(0 , 7) && position[1].between?(0 , 7)
-
   end
 
   def capture(other_piece)
@@ -45,6 +44,7 @@ class Piece
   end
 
   def legal_move?(to_position)
+    return false unless on_board?(to_position)
     return false unless specific_legal_move?(to_position)
     return false if board.move_puts_player_in_check?(position, to_position, color)
     true
