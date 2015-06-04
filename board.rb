@@ -32,30 +32,10 @@ class Board
     return nil if x > 7
     board[x][y]
   end
+
   def []=(pos, value)
     x, y = pos
     board[x][y] = value
-  end
-
-  def king_position(color)
-    board.each do |row|
-      row.each do |piece|
-        if piece && piece.piece_type == :king && piece.color == color
-          return piece.position
-        end
-      end
-    end
-  end
-
-  def in_check?(color)
-    board.each do |row|
-      row.each do |piece|
-        if piece && piece.specific_legal_move?(king_position(color))
-          return true
-        end
-      end
-    end
-    false
   end
 
   def each_piece(&prc)
@@ -67,13 +47,29 @@ class Board
     nil
   end
 
+  def king_position(color)
+    each_piece do |piece|
+      if piece.piece_type == :king && piece.color == color
+        return piece.position
+      end
+    end
+  end
+
+  def in_check?(color)
+    each_piece do |piece|
+      if piece.specific_legal_move?(king_position(color))
+        return true
+      end
+    end
+    false
+  end
+
+
   def checkmate?(color)
     return false unless in_check?(color)
-    board.each do |row|
-      row.each do |piece|
-        next if piece.nil? || piece.color != color
-        return false unless piece.valid_moves.empty?
-      end
+    each_piece do |piece|
+      next if piece.color != color
+      return false unless piece.valid_moves.empty?
     end
     true
   end

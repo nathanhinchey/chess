@@ -36,13 +36,13 @@ class Game
     loop do
       @board.print_board
 
-      input_loop(color)
-      break if @board.checkmate?(color)
-      color = switch_color(color)
+      input_loop(color) #color = white
+      color = switch_color(color) #color = black
+      break if @board.checkmate?(color) #color = black
       from_pos, to_pos = comp.make_move
       @board.move(from_pos, to_pos)
-      break if @board.checkmate?(color)
-      color = switch_color(color)
+      color = switch_color(color) #color = white
+      break if @board.checkmate?(color) #color = white
 
     end
     @board.print_board

@@ -54,7 +54,6 @@ class SteppingPiece < Piece
     else
       KING_MOVES.each do |move|
         if legal_move?([@position[0] + move[0], @position[1] + move[1]])
-          p [position[0] + move[0], position[1] + move[1]]
           valid_moves_array << [@position[0] + move[0], @position[1] + move[1]]
         end
       end
