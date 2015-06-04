@@ -31,13 +31,13 @@ class Pawn < Piece
 
   def valid_moves
     valid_moves_array = []
-
+    x,y = self.position
     test_positions = [
-      [1 * @direction, 0],
-      [1 * @direction, 1 * @direction],
-      [1 * @direction, 1 * @direction],
-      [1 * @direction, -1 * @direction],
-      [2 * @direction, 0]
+      [x + 1 * @direction, y + 0],
+      [x + 1 * @direction, y + 1 * @direction],
+      [x + 1 * @direction, y + 1 * @direction],
+      [x + 1 * @direction, y + -1 * @direction],
+      [x + 2 * @direction, y + 0]
     ]
 
     test_positions.each do |test_position|
