@@ -1,7 +1,7 @@
 require 'byebug'
-require_relative 'slidingpiece'
-require_relative 'steppingpiece'
-require_relative 'pawn'
+require_relative 'pieces/slidingpiece'
+require_relative 'pieces/steppingpiece'
+require_relative 'pieces/pawn'
 
 class Board
 
